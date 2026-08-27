@@ -55,7 +55,6 @@ class StructureMatcher:
 class IntentDetector:
     def __init__(self, intents: IntentsGroup):
         self.intents = intents
-        self.weights = {}
 
     def phrase_matcher(self, message, phrase):
         message_lemmas = set(message.lemmas)
