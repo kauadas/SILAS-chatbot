@@ -1,0 +1,625 @@
+{
+  "intents": [
+    {
+      "name": "greeting",
+      "phrases": [
+        "oi",
+        "olá",
+        "ola",
+        "e aí",
+        "eai",
+        "eae",
+        "bom dia",
+        "boa tarde",
+        "boa noite",
+        "como vai",
+        "como você está",
+        "tudo bem",
+        "tudo certo",
+        "fala",
+        "salve",
+        "opa",
+        "oi tudo bem",
+        "olá tudo bem",
+        "e aí tudo certo"
+      ]
+    },
+    {
+      "name": "goodbye",
+      "phrases": [
+        "tchau",
+        "adeus",
+        "até mais",
+        "até logo",
+        "até depois",
+        "falou",
+        "flw",
+        "vou embora",
+        "preciso ir",
+        "estou indo",
+        "nos vemos",
+        "até a próxima",
+        "boa noite",
+        "tenha um bom dia",
+        "até amanhã"
+      ]
+    },
+    {
+      "name": "thanks",
+      "phrases": [
+        "obrigado",
+        "obrigada",
+        "muito obrigado",
+        "muito obrigada",
+        "valeu",
+        "valeu mesmo",
+        "brigado",
+        "brigadão",
+        "agradeço",
+        "agradeço pela ajuda",
+        "muito valeu",
+        "você ajudou bastante",
+        "obrigado pela ajuda",
+        "obrigado por isso"
+      ]
+    },
+    {
+      "name": "help",
+      "phrases": [
+        "me ajuda",
+        "pode me ajudar",
+        "preciso de ajuda",
+        "quero ajuda",
+        "você pode me ajudar",
+        "como você pode me ajudar",
+        "o que você pode fazer",
+        "quais coisas você consegue fazer",
+        "quais são suas funções",
+        "me mostre o que você sabe fazer",
+        "o que você sabe fazer",
+        "como você funciona"
+      ]
+    },
+    {
+      "name": "time_query",
+      "phrases": [
+        "que horas são",
+        "qual é a hora",
+        "qual a hora",
+        "que hora é",
+        "me diga as horas",
+        "pode me dizer que horas são",
+        "você sabe que horas são",
+        "me fala a hora",
+        "me fale o horário",
+        "qual é o horário agora",
+        "que horas temos",
+        "horário atual",
+        "hora atual"
+      ]
+    },
+    {
+      "name": "date_query",
+      "phrases": [
+        "que dia é hoje",
+        "qual é a data de hoje",
+        "qual a data",
+        "me diga a data",
+        "me fala a data",
+        "que dia estamos",
+        "em que dia estamos",
+        "qual é o dia de hoje",
+        "qual a data de hoje",
+        "você sabe que dia é hoje",
+        "qual é o dia"
+      ]
+    },
+    {
+      "name": "day_of_week_query",
+      "phrases": [
+        "que dia da semana é hoje",
+        "qual dia da semana estamos",
+        "hoje é que dia",
+        "hoje é segunda",
+        "que dia da semana é",
+        "qual é o dia da semana",
+        "em que dia da semana estamos",
+        "qual o dia da semana hoje"
+      ]
+    },
+    {
+      "name": "weather_query",
+      "phrases": [
+        "como está o tempo",
+        "como está o clima",
+        "qual o tempo hoje",
+        "como está o clima hoje",
+        "vai chover hoje",
+        "vai chover",
+        "está chovendo",
+        "está frio hoje",
+        "está quente hoje",
+        "qual a previsão do tempo",
+        "me diga a previsão do tempo",
+        "como vai estar o tempo",
+        "qual a temperatura",
+        "quantos graus está fazendo"
+      ]
+    },
+    {
+      "name": "create_reminder",
+      "phrases": [
+        "crie um lembrete",
+        "adiciona um lembrete",
+        "adicione um lembrete",
+        "me lembre de algo",
+        "me lembre disso",
+        "não me deixe esquecer disso",
+        "quero criar um lembrete",
+        "preciso criar um lembrete",
+        "coloque um lembrete",
+        "marca isso como lembrete",
+        "me avise depois",
+        "me lembra disso depois",
+        "quero ser lembrado disso",
+        "não quero esquecer disso"
+      ]
+    },
+    {
+      "name": "list_reminders",
+      "phrases": [
+        "mostre meus lembretes",
+        "quais são meus lembretes",
+        "me mostre os lembretes",
+        "liste meus lembretes",
+        "quero ver meus lembretes",
+        "quais lembretes eu tenho",
+        "tenho algum lembrete",
+        "meus lembretes",
+        "ver lembretes",
+        "mostrar lembretes",
+        "o que eu tenho para lembrar"
+      ]
+    },
+    {
+      "name": "delete_reminder",
+      "phrases": [
+        "apague o lembrete",
+        "delete o lembrete",
+        "remova o lembrete",
+        "quero apagar um lembrete",
+        "quero remover um lembrete",
+        "cancele o lembrete",
+        "exclua o lembrete",
+        "tira esse lembrete",
+        "não quero mais esse lembrete",
+        "pode apagar esse lembrete"
+      ]
+    },
+    {
+      "name": "create_task",
+      "phrases": [
+        "crie uma tarefa",
+        "adicione uma tarefa",
+        "adiciona uma tarefa",
+        "quero criar uma tarefa",
+        "preciso criar uma tarefa",
+        "coloque uma tarefa na lista",
+        "adicione isso às tarefas",
+        "anote uma tarefa",
+        "registre uma tarefa",
+        "tenho uma tarefa para fazer",
+        "coloque isso na minha lista de tarefas"
+      ]
+    },
+    {
+      "name": "list_tasks",
+      "phrases": [
+        "mostre minhas tarefas",
+        "quais são minhas tarefas",
+        "liste minhas tarefas",
+        "quero ver minhas tarefas",
+        "o que eu tenho para fazer",
+        "o que tenho que fazer",
+        "quais tarefas estão pendentes",
+        "me mostre minhas tarefas pendentes",
+        "minhas tarefas",
+        "ver tarefas",
+        "mostrar tarefas"
+      ]
+    },
+    {
+      "name": "complete_task",
+      "phrases": [
+        "conclua a tarefa",
+        "marque a tarefa como concluída",
+        "terminei a tarefa",
+        "finalizei a tarefa",
+        "completei a tarefa",
+        "marque isso como feito",
+        "pode marcar como concluída",
+        "essa tarefa está pronta",
+        "terminei isso",
+        "já fiz essa tarefa"
+      ]
+    },
+    {
+      "name": "delete_task",
+      "phrases": [
+        "apague a tarefa",
+        "delete a tarefa",
+        "remova a tarefa",
+        "exclua a tarefa",
+        "quero apagar essa tarefa",
+        "não preciso mais dessa tarefa",
+        "cancele essa tarefa",
+        "tire essa tarefa da lista",
+        "remova isso das tarefas"
+      ]
+    },
+    {
+      "name": "search",
+      "phrases": [
+        "pesquise isso",
+        "procure isso",
+        "faça uma pesquisa",
+        "pesquise na internet",
+        "procure na internet",
+        "busque por isso",
+        "quero pesquisar algo",
+        "pesquise por",
+        "procure por",
+        "faça uma busca",
+        "busque isso para mim"
+      ]
+    },
+    {
+      "name": "open_application",
+      "phrases": [
+        "abra o aplicativo",
+        "abra o programa",
+        "inicie o aplicativo",
+        "inicie o programa",
+        "execute o programa",
+        "pode abrir isso",
+        "abra isso",
+        "inicie isso",
+        "execute isso",
+        "quero abrir um programa"
+      ]
+    },
+    {
+      "name": "close_application",
+      "phrases": [
+        "feche o aplicativo",
+        "feche o programa",
+        "encerre o aplicativo",
+        "encerre o programa",
+        "pode fechar isso",
+        "fecha isso",
+        "feche isso",
+        "quero fechar o programa",
+        "pare o programa"
+      ]
+    },
+    {
+      "name": "play_music",
+      "phrases": [
+        "toque uma música",
+        "coloque uma música",
+        "quero ouvir música",
+        "toque música",
+        "comece a tocar música",
+        "coloque uma playlist",
+        "reproduza uma música",
+        "pode tocar uma música",
+        "quero escutar música",
+        "começa a música"
+      ]
+    },
+    {
+      "name": "stop_music",
+      "phrases": [
+        "pare a música",
+        "pare de tocar",
+        "pause a música",
+        "pausa a música",
+        "pare a música que está tocando",
+        "pode parar a música",
+        "pare de reproduzir",
+        "interrompa a música"
+      ]
+    },
+    {
+      "name": "increase_volume",
+      "phrases": [
+        "aumente o volume",
+        "aumenta o volume",
+        "coloque o volume mais alto",
+        "deixe o som mais alto",
+        "aumente o som",
+        "mais volume",
+        "sobe o volume",
+        "pode aumentar o volume"
+      ]
+    },
+    {
+      "name": "decrease_volume",
+      "phrases": [
+        "diminua o volume",
+        "diminui o volume",
+        "abaixe o volume",
+        "deixe o som mais baixo",
+        "diminua o som",
+        "menos volume",
+        "baixa o volume",
+        "pode diminuir o volume"
+      ]
+    },
+    {
+      "name": "mute",
+      "phrases": [
+        "mudo",
+        "silencie",
+        "silencia o computador",
+        "desative o som",
+        "tire o som",
+        "coloque no mudo",
+        "ative o mudo",
+        "não quero ouvir nada"
+      ]
+    },
+    {
+      "name": "unmute",
+      "phrases": [
+        "ative o som",
+        "tire do mudo",
+        "desative o mudo",
+        "volte o som",
+        "reative o som",
+        "pode ligar o som",
+        "quero o som de volta"
+      ]
+    },
+    {
+      "name": "shutdown",
+      "phrases": [
+        "desligue o computador",
+        "desliga o computador",
+        "quero desligar o computador",
+        "desligue a máquina",
+        "pode desligar",
+        "desligue o sistema",
+        "quero desligar o sistema",
+        "encerre o computador"
+      ]
+    },
+    {
+      "name": "restart",
+      "phrases": [
+        "reinicie o computador",
+        "reinicia o computador",
+        "quero reiniciar",
+        "reinicie a máquina",
+        "reinicie o sistema",
+        "pode reiniciar",
+        "quero reiniciar o computador",
+        "faça um reboot",
+        "reinicia isso"
+      ]
+    },
+    {
+      "name": "lock_computer",
+      "phrases": [
+        "bloqueie o computador",
+        "bloqueia o computador",
+        "trave o computador",
+        "trava a tela",
+        "bloqueie a tela",
+        "quero bloquear o computador",
+        "pode bloquear a tela",
+        "bloqueia isso"
+      ]
+    },
+    {
+      "name": "identity",
+      "phrases": [
+        "quem é você",
+        "o que você é",
+        "como você se chama",
+        "qual é seu nome",
+        "qual seu nome",
+        "me diga seu nome",
+        "quem está falando",
+        "quem está aí",
+        "você é quem",
+        "me fale sobre você"
+      ]
+    },
+    {
+      "name": "capabilities",
+      "phrases": [
+        "o que você consegue fazer",
+        "o que você pode fazer",
+        "quais são suas capacidades",
+        "quais são suas funções",
+        "quais comandos você entende",
+        "que coisas você sabe fazer",
+        "o que você sabe fazer",
+        "quais tarefas você consegue realizar"
+      ]
+    },
+    {
+      "name": "confirmation",
+      "phrases": [
+        "sim",
+        "isso",
+        "isso mesmo",
+        "exatamente",
+        "correto",
+        "certo",
+        "pode ser",
+        "pode fazer",
+        "faça isso",
+        "confirmo",
+        "confirmado"
+      ]
+    },
+    {
+      "name": "denial",
+      "phrases": [
+        "não",
+        "não quero",
+        "negativo",
+        "de jeito nenhum",
+        "não faça isso",
+        "cancela",
+        "cancele",
+        "isso não",
+        "não é isso",
+        "está errado"
+      ]
+    },
+    {
+      "name": "small_talk",
+      "phrases": [
+        "como foi seu dia",
+        "o que você está fazendo",
+        "está tudo bem",
+        "você está bem",
+        "está ocupado",
+        "vamos conversar",
+        "quero conversar",
+        "bora conversar",
+        "me conte alguma coisa",
+        "fale comigo"
+      ]
+    },
+    {
+      "name": "joke",
+      "phrases": [
+        "me conte uma piada",
+        "conta uma piada",
+        "conte uma piada",
+        "quero ouvir uma piada",
+        "me faça rir",
+        "fala alguma coisa engraçada",
+        "conte algo engraçado",
+        "tem alguma piada"
+      ]
+    },
+    {
+      "name": "compliment",
+      "phrases": [
+        "você é inteligente",
+        "você é muito bom",
+        "você é ótimo",
+        "você ajuda muito",
+        "você é incrível",
+        "gostei de você",
+        "você é legal",
+        "bom trabalho",
+        "mandou bem",
+        "você fez um bom trabalho"
+      ]
+    },
+    {
+      "name": "insult",
+      "phrases": [
+        "você é burro",
+        "você é idiota",
+        "que burro",
+        "você não sabe nada",
+        "você é inútil",
+        "isso foi muito burro",
+        "que resposta idiota",
+        "você não entende nada"
+      ]
+    },
+    {
+      "name": "affirmation",
+      "phrases": [
+        "sim",
+        "claro",
+        "com certeza",
+        "certamente",
+        "isso",
+        "exato",
+        "correto",
+        "isso mesmo",
+        "sem dúvida"
+      ]
+    },
+    {
+      "name": "cancel",
+      "phrases": [
+        "cancela",
+        "cancelar",
+        "cancele isso",
+        "pare isso",
+        "não quero mais",
+        "deixa para lá",
+        "esquece isso",
+        "pode cancelar",
+        "não faça mais isso",
+        "interrompa"
+      ]
+    },
+    {
+      "name": "repeat",
+      "phrases": [
+        "repita",
+        "pode repetir",
+        "repete",
+        "repita isso",
+        "não entendi",
+        "pode falar de novo",
+        "fale novamente",
+        "diga novamente",
+        "repete por favor",
+        "não ouvi"
+      ]
+    },
+    {
+      "name": "explanation_request",
+      "phrases": [
+        "me explique",
+        "pode explicar",
+        "explique isso",
+        "como isso funciona",
+        "por que isso acontece",
+        "quero entender",
+        "me ajuda a entender",
+        "explique melhor",
+        "pode explicar melhor",
+        "não entendi como funciona"
+      ]
+    },
+    {
+      "name": "calculate",
+      "phrases": [
+        "calcule isso",
+        "quanto é",
+        "faça essa conta",
+        "calcula para mim",
+        "pode calcular",
+        "qual o resultado",
+        "resolva essa conta",
+        "faça o cálculo",
+        "quanto dá",
+        "me diga o resultado"
+      ]
+    },
+    {
+      "name": "unknown",
+      "phrases": [
+        "não sei",
+        "não entendi",
+        "não faço ideia",
+        "o que é isso",
+        "não sei o que fazer",
+        "não entendi isso"
+      ]
+    }
+  ]
+}
