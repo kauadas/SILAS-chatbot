@@ -9,21 +9,16 @@ def NLUTEST():
 
     intents = []
 
-    with open("/home/kstocker/Documentos/programação/SILAS chatbot/test.json", "r") as f:
-        intentsjson = json.load(f)
-        for intent in intentsjson["intents"]:
-            intent = Intent(intent["name"], intent["phrases"], [], [], None, None)
-            intents.append(intent)
 
     intents = IntentsGroup.load("intents")
 
     print(len(intents.intents))
 
     from services.preprocessing.message import Message
-
+    natural_processing = NaturalProcessing(intents, None)
     test = input(" >> ")
 
-    natural_processing = NaturalProcessing(intents, None)
+    
     message = Message(nlp, test)
     print(message.deps)
     intent = natural_processing.process(message)

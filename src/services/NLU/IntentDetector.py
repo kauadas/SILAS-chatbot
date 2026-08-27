@@ -55,6 +55,7 @@ class StructureMatcher:
 class IntentDetector:
     def __init__(self, intents: IntentsGroup):
         self.intents = intents
+        self.weights = {}
 
     def phrase_matcher(self, message, phrase):
         message_lemmas = set(message.lemmas)
@@ -64,8 +65,10 @@ class IntentDetector:
             return 0.0
 
         intersection = message_lemmas.intersection(phrase_lemmas)
-        
+
+
         phrase_similarity = len(intersection) / len(phrase_lemmas)
+
         message_similarity = len(intersection) / len(message_lemmas)
 
 
