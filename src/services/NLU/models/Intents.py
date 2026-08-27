@@ -5,7 +5,8 @@ class Intent:
         self.name = name
         self.phrases = phrases
         self.lemmas = None
-        self.structure = None
+        self.tags = None
+        self.deps = None
         self.required_entities = required_entities
         self.optional_entities = optional_entities
         self.function = function
@@ -14,14 +15,20 @@ class Intent:
     def process(self, nlp):
 
         final_phrases = []
-        structure = []
+        tags = []
+        deps = []
         for training_phrase in self.phrases:
             doc = nlp(training_phrase.lower())
             final_phrases.append([token.lemma_ for token in doc])
-            structure.append([token.pos_ for token in doc])
+            tags.append([token.pos_ for token in doc])
+            deps.append([token.dep_ for token in doc])
 
         self.lemmas = final_phrases
-        self.structure = structure
+        self.tags = tags
+        self.deps = deps
+
+    def context(self):
+        pass
 
 
 class IntentsGroup:

@@ -4,7 +4,7 @@ class IntentDetector:
     def __init__(self, intents: IntentsGroup):
         self.intents = intents
 
-    def _phrase_similarity(self, message, phrase):
+    def phrase_matcher(self, message, phrase):
         message_lemmas = set(message.lemmas)
         phrase_lemmas = set(phrase)
 
@@ -21,11 +21,11 @@ class IntentDetector:
 
         return similarity
 
-    def intent_detection_by_phrases(self, message, intent):
+    def lexical_similarity(self, message, intent):
         candidates = []
 
         for phrase in intent.lemmas:
-            similarity = self._phrase_similarity(message, phrase)
+            similarity = self.phrase_matcher(message, phrase)
             #print(f"Similarity: {similarity}")
             candidates.append((intent, similarity))
                 
@@ -35,8 +35,11 @@ class IntentDetector:
     def detect_intent(self, message):
         candidates = []
         for intent in self.intents.intents:
-            candidates.append(self.intent_detection_by_phrases(message, intent))
+            lexical_similarity = self.lexical_similarity(message, intent)
+
+            candidates.append(lexical_similarity)
 
         candidates = sorted(candidates, key=lambda x: x[1], reverse=True)
+
         return candidates[:3]
                 
