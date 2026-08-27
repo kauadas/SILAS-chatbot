@@ -15,8 +15,7 @@ def NLUTEST():
             intent = Intent(intent["name"], intent["phrases"], [], [], None, None)
             intents.append(intent)
 
-    intents = IntentsGroup(intents)
-    intents.process(nlp)
+    intents = IntentsGroup.load("intents")
 
     print(len(intents.intents))
 
@@ -26,11 +25,12 @@ def NLUTEST():
 
     natural_processing = NaturalProcessing(intents, None)
     message = Message(nlp, test)
+    print(message.deps)
     intent = natural_processing.process(message)
 
     print("para a mensagem: ", test, "foi detectado o seguinte intent:")
     for i in intent:
-        print(i[0].name, i[1])
+        print(i.intent.name, i.lexical_score, i.structural_score, i.entity_score, i.context_score, i.total_score())
 
 
 if __name__ == "__main__":

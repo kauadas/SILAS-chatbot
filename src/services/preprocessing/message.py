@@ -8,6 +8,7 @@ class Message:
         self.tokenize()
         self.lemmatize()
         self.classify()
+        self.deps()
 
     def normalize(self):
         self.normalized = self.content.lower()
@@ -28,8 +29,10 @@ class Message:
         self.tags = [token.pos_ for token in self.tokens]
         return self.tags
 
-
-
+    def deps(self):
+        self.deps = [token.dep_ for token in self.tokens]
+        return self.deps
+    
 if __name__ == "__main__":
     nlp = spacy.load("pt_core_news_sm")
     message = Message(nlp, "Os gatos estavam correndo no telhado!")
