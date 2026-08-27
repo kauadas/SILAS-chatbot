@@ -16,7 +16,8 @@ class NaturalProcessing:
         self.intentsDetector = IntentDetector(self.intents)
 
         self.context = Context()
+        self.context.state = "start"
 
     def process(self, message):
-        intent = self.intentsDetector.detect_intent(message)
+        intent = self.intentsDetector.detect_intent(message, self.context)
         return intent
