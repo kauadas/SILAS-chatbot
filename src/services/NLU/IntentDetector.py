@@ -9,7 +9,7 @@ class IntentCandidate:
         self.context_score = 0
 
     def total_score(self):
-        return self.lexical_score + self.structural_score + self.entity_score + self.context_score
+        return self.lexical_score * 0.8 + self.structural_score * 0.2 + self.entity_score + self.context_score
 
 class StructureMatcher:
 
@@ -65,10 +65,16 @@ class IntentDetector:
 
         intersection = message_lemmas.intersection(phrase_lemmas)
 
+        matched_weight = sum([self.intents.get_weight(lemma) for lemma in intersection])
 
-        phrase_similarity = len(intersection) / len(phrase_lemmas)
+        phrase_weight = sum([self.intents.get_weight(lemma) for lemma in phrase_lemmas])
 
-        message_similarity = len(intersection) / len(message_lemmas)
+        message_weight = sum([self.intents.get_weight(lemma) for lemma in message_lemmas])
+
+
+        phrase_similarity = matched_weight / phrase_weight
+
+        message_similarity = matched_weight / message_weight
 
 
         similarity = (phrase_similarity + message_similarity) / 2

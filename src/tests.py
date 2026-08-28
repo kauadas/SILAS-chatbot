@@ -7,12 +7,24 @@ def NLUTEST():
     nlp = spacy.load("pt_core_news_sm")
 
 
-    intents = []
+    # intents = []
 
 
-    intents = IntentsGroup.load("intents")
+    # with open("test.json", "r") as f:
+    #     data = json.load(f)
+
+    # for intent in data["intents"]:
+    #     intents.append(Intent(intent["name"], intent["phrases"], [], [], None, None))
+
+    # intents = IntentsGroup(intents)
+    # intents.process(nlp)
+
+    # intents.save("intents.pkl")
+
+    intents = IntentsGroup.load("intents.pkl")
 
     print(len(intents.intents))
+
 
     from services.preprocessing.message import Message
     natural_processing = NaturalProcessing(intents, None)
@@ -20,8 +32,9 @@ def NLUTEST():
 
     
     message = Message(nlp, test)
-    print(message.deps)
+    print([intents.get_weight(token.lemma_) for token in message.tokens])
     intent = natural_processing.process(message)
+
 
     print("para a mensagem: ", test, "foi detectado o seguinte intent:")
     for i in intent:
