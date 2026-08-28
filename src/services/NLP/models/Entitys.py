@@ -2,6 +2,7 @@ import pickle
 
 class EntitysGroup:
     def __init__(self, entitys):
+        
         self.entitys = entitys
 
 class Entity:
