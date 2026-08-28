@@ -2,197 +2,193 @@
 
 ## Sistema Idiota de Linguística e Análise Sintática
 
-O **SILAS** é um chatbot experimental desenvolvido como uma alternativa **extremamente leve** aos modelos de linguagem de grande escala (LLMs) para aplicações de conversação em projetos próprios.
+O SILAS é um chatbot experimental em Python para detecção de intenção em linguagem natural. O projeto foi pensado como alternativa leve e modular para conversas simples, em vez de depender de um modelo grande para tarefas básicas.
 
-A proposta é utilizar técnicas clássicas de processamento de linguagem natural combinadas em uma arquitetura modular, evitando a necessidade de executar grandes modelos neurais para tarefas simples de conversação.
+Ele combina:
 
-> **Leve, modular, interpretável e feito para ser incorporado em projetos próprios.**
+- normalização e tokenização de mensagens;
+- lematização e análise sintática com spaCy;
+- comparação de frases por similaridade léxica e estrutural;
+- arquitetura em camadas para facilitar expansão.
 
 ---
 
-## 🧠 Conceito
+## Objetivo
 
-Em vez de depender de um grande modelo que tenta resolver toda a tarefa de linguagem de uma única vez, o SILAS divide o processamento em componentes especializados.
+O sistema busca interpretar a intenção do usuário e classificar mensagens em categorias como cumprimentos, perguntas, tarefas, lembretes e comandos. A proposta principal é manter o código simples, transparente e fácil de adaptar em projetos próprios.
+
+---
+
+## Estrutura do projeto
 
 ```text
-Entrada
-   │
-   ▼
-Preprocessamento
-   │
-   ▼
-NLU
-   │
-   ▼
-Análise sintática / CFG
-   │
-   ▼
-Gerenciamento de diálogo
-   │
-   ▼
-Geração Markov
-   │
-   ▼
-Resposta
+SILAS/
+├── README.md
+├── intent_test.py
+├── test.json
+├── data/
+│   ├── corpus/
+│   └── grammar/
+├── src/
+│   ├── main.py
+│   ├── tests.py
+│   └── services/
+│       ├── CFG/
+│       ├── NLU/
+│       │   ├── Context.py
+│       │   ├── IntentDetector.py
+│       │   ├── natural_processing.py
+│       │   ├── Vocabulary.py
+│       │   └── models/
+│       │       ├── Entitys.py
+│       │       └── Intents.py
+│       └── preprocessing/
+│           └── message.py
+└── .venv/
 ```
 
-Cada componente possui uma responsabilidade específica, permitindo que o sistema seja adaptado de acordo com as necessidades do projeto onde for utilizado.
-
 ---
 
-## 🔬 Tecnologias e conceitos
+## Como o sistema trabalha
 
-O SILAS utiliza ou pretende utilizar:
-
-- **NLU (Natural Language Understanding)** para interpretação das entradas;
-- **spaCy** para processamento linguístico;
-- **Gramáticas Livres de Contexto (CFG)** para estruturação e análise sintática;
-- **Cadeias de Markov** para modelagem probabilística e geração de texto;
-- **Gerenciamento de contexto** para conversas de múltiplas etapas;
-- **Regras e respostas determinísticas** para situações que exigem precisão.
-
-Bibliotecas externas podem ser utilizadas quando agregarem valor ao projeto. O objetivo não é reinventar todas as ferramentas existentes, mas construir uma arquitetura simples e eficiente utilizando as melhores ferramentas disponíveis para cada problema.
-
----
-
-## ⚡ Por que o SILAS?
-
-LLMs são extremamente poderosos, mas nem todo chatbot precisa de bilhões de parâmetros para responder a comandos, interpretar intenções ou conduzir diálogos simples.
-
-O SILAS busca atender justamente esse espaço.
-
-### Vantagens pretendidas
-
-- 🪶 **Baixo consumo de recursos**
-- 🚀 **Execução local**
-- 🔧 **Fácil integração em projetos próprios**
-- 🧩 **Arquitetura modular**
-- 🔍 **Comportamento interpretável**
-- 📦 **Poucas dependências**
-- ⚙️ **Controle sobre o funcionamento interno**
-- 📴 **Possibilidade de funcionamento totalmente offline**
-
-O SILAS não pretende competir diretamente com LLMs em conhecimento geral ou geração aberta de texto. A proposta é oferecer uma alternativa quando **simplicidade, controle, desempenho e baixo consumo de recursos** forem mais importantes.
-
----
-
-## 🏗️ Arquitetura
-
-### Preprocessamento
-
-Responsável por transformar o texto bruto em informações linguísticas utilizáveis.
-
-Exemplos:
-
-- tokenização;
-- normalização;
-- lematização;
-- POS tagging;
-- dependências sintáticas.
-
-### NLU
-
-Responsável por determinar o que o usuário está tentando fazer.
-
-Exemplo:
+A pipeline atual do projeto é:
 
 ```text
-"que horas são?"
-
-intent: time_query
-confidence: 0.94
+Mensagem do usuário
+   ↓
+Normalização
+   ↓
+Tokenização + lematização
+   ↓
+Análise de partes do discurso e dependências
+   ↓
+Comparação com intenções treinadas
+   ↓
+Ranking dos candidatos
+   ↓
+Resposta ou ação
 ```
 
-Também deverá realizar a extração de entidades relevantes.
+A detecção de intenção usa similaridade léxica e estrutural. Em outras palavras, o sistema tenta identificar a intenção comparando o texto do usuário com frases de exemplo já conhecidas no dataset.
 
-### CFG
+---
 
-A Gramática Livre de Contexto será utilizada para representar e analisar estruturas sintáticas.
+## Intenções de exemplo
 
-Exemplo conceitual:
+O arquivo `test.json` contém vários exemplos de intenções, incluindo:
 
-```text
-S  → NP VP
-NP → DET N
-VP → V NP
+- cumprimento (`greeting`)
+- despedida (`goodbye`)
+- agradecimento (`thanks`)
+- ajuda (`help`)
+- hora/data (`time_query`, `date_query`)
+- clima (`weather_query`)
+- tarefas e lembretes
+- pesquisa, aplicativos e controle de sistema
+- conversa casual e piadas
+- intent desconhecida (`unknown`)
+
+---
+
+## Componentes principais
+
+### `src/services/preprocessing/message.py`
+
+Responsável por:
+
+- limpar a mensagem;
+- normalizar para minúsculas;
+- tokenizar;
+- extrair lemas;
+- obter tags e dependências sintáticas.
+
+### `src/services/NLU/IntentDetector.py`
+
+Implementa a lógica de classificação. Ele calcula pontuações de:
+
+- similaridade lexical;
+- similaridade estrutural;
+- ranking dos candidatos.
+
+### `src/services/NLU/models/Intents.py`
+
+Define as classes que representam uma intenção e um grupo de intenções, além de processamento e persistência do conjunto de intenções.
+
+### `src/services/NLU/Context.py`
+
+Mantém o contexto do diálogo e o histórico de estado da conversa.
+
+---
+
+## Requisitos
+
+- Python 3.10+
+- spaCy
+- modelo `pt_core_news_sm`
+
+---
+
+## Como executar
+
+### 1) Criar ambiente virtual
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
 ```
 
-### Dialogue Manager
+### 2) Instalar dependências
 
-Responsável por manter o estado da conversa e decidir como o sistema deve reagir ao contexto atual.
-
-### Markov
-
-As cadeias de Markov serão utilizadas para gerar variações probabilísticas de respostas e permitir que o SILAS desenvolva diferentes estilos de geração a partir de corpora.
-
-Respostas que exigem precisão poderão continuar utilizando regras determinísticas.
-
----
-
-## 🎯 Objetivos do projeto
-
-- [ ] Construir uma NLU funcional.
-- [ ] Implementar identificação de intenções.
-- [ ] Implementar extração de entidades.
-- [ ] Construir uma gramática para português.
-- [ ] Implementar análise sintática baseada em CFG.
-- [ ] Implementar cadeia de Markov para geração.
-- [ ] Criar gerenciamento de contexto.
-- [ ] Integrar todas as camadas em um pipeline único.
-- [ ] Desenvolver uma personalidade própria para o SILAS.
-- [ ] Criar testes e métricas de desempenho.
-- [ ] Otimizar consumo de memória e processamento.
-- [ ] Facilitar a integração do SILAS em outros projetos.
-
----
-
-## 📁 Organização
-
-A arquitetura do projeto será definida de forma incremental conforme os componentes forem desenvolvidos.
-
-A prioridade é manter separadas as responsabilidades de:
-
-```text
-preprocessamento
-NLU
-CFG / parser
-diálogo
-Markov
-geração
-interface
+```bash
+pip install spacy
+python -m spacy download pt_core_news_sm
 ```
 
-A estrutura definitiva não é considerada fechada e poderá evoluir durante o desenvolvimento.
+### 3) Rodar o chatbot
+
+```bash
+python src/main.py
+```
+
+### 4) Testar a detecção de intenção
+
+```bash
+python src/tests.py
+```
 
 ---
 
-## 🧪 Status
+## Status atual
 
-**Em desenvolvimento.**
+O projeto está em desenvolvimento, mas já possui uma base funcional de NLU experimental.
 
-O preprocessamento linguístico inicial já está funcionando com spaCy, incluindo:
+### Funcionalidades presentes
 
-- tokenização;
-- lematização;
-- POS tagging;
-- análise de dependências sintáticas.
+- ✅ preprocessamento de mensagem
+- ✅ tokenização e lematização
+- ✅ análise de tags e dependências
+- ✅ detecção de intenção por similaridade
+- ✅ dataset inicial com intenções
+- ✅ execução básica do chatbot em terminal
 
-As próximas etapas concentram-se na construção da NLU e na integração progressiva das demais camadas.
+### O que ainda está sendo construido
 
----
-
-## 🚧 Filosofia
-
-O SILAS foi concebido para ser uma ferramenta prática para **projetos próprios**, e não apenas uma demonstração acadêmica.
-
-A arquitetura deverá permitir que um desenvolvedor escolha quais capacidades deseja utilizar e adapte o chatbot ao domínio específico da aplicação.
-
-A ideia é simples:
-
-> **Se uma tarefa simples pode ser resolvida com algumas regras, probabilidades e análise linguística, não há necessidade de colocar uma LLM inteira para fazê-la.**
+- refinamento da detecção de intenção
+- gerenciamento de diálogo mais robusto
+- entidades e contexto mais avançados
+- integração com respostas estruturadas
+- evolução da camada CFG e análise sintática
 
 ---
 
-## 📜 Licença
+## Filosofia do projeto
 
-A licença do projeto será definida posteriormente.
+O SILAS foi pensado como uma opção leve e transparente para projetos próprios. Em vez de depender de um modelo gigante para algo que pode ser resolvido com regras, similaridade e análise linguística simples, o projeto busca manter o sistema compreensível e adaptável.
+
+> Quando a tarefa é bem definida e limitada, nem sempre é necessário carregar um LLM completo para resolvê-la.
+
+---
+
+## Licença
+
+A licença do projeto ainda será definida conforme sua evolução e uso.
