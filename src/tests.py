@@ -1,7 +1,7 @@
 
 def NLUTEST():
-    from services.NLU.natural_processing import NaturalProcessing
-    from services.NLU.models.Intents import IntentsGroup, Intent
+    from services.NLP.natural_processing import NaturalProcessing
+    from services.NLP.models.Intents import IntentsGroup, Intent
     import spacy
     import json
     nlp = spacy.load("pt_core_news_sm")
