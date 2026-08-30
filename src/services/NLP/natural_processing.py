@@ -4,6 +4,11 @@ from .Context import Context
 from .models.Entitys import EntitysGroup
 
 
+class NLPResponse:
+    def __init__(self, intent, entities):
+        self.intent = intent
+        self.entities = entities
+
 class NaturalProcessing:
     def __init__(self, intents: IntentsGroup, entitys: EntitysGroup):
         

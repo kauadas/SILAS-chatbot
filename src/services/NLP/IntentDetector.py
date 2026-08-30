@@ -36,7 +36,7 @@ class StructureMatcher:
         message_structure = message.deps
 
         if not message_structure or not structure:
-            return 2
+            return 0
 
         distance = self._levenshtein(message_structure, structure)
         
@@ -71,6 +71,8 @@ class IntentDetector:
 
         message_weight = sum([self.intents.get_weight(lemma) for lemma in message_lemmas])
 
+        if phrase_weight == 0 or message_weight == 0:
+            return 0
 
         phrase_similarity = matched_weight / phrase_weight
 
@@ -88,7 +90,10 @@ class IntentDetector:
             similarity = self.phrase_matcher(message, phrase)
             #print(f"Similarity: {similarity}")
             candidates.append(similarity)
-                
+
+        if not candidates:
+            return 0
+        
         candidate = max(candidates)
         return candidate
 

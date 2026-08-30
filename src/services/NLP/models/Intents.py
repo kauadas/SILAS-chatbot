@@ -40,6 +40,7 @@ class IntentsGroup:
         self.intents = intents
         self.is_processed = False
         self.weights = {}
+        self.vocab = []
 
     def process(self, nlp):
         for intent in self.intents:
@@ -49,6 +50,7 @@ class IntentsGroup:
         print("Intents processed")
 
         self.gen_weights()
+        self.gen_vocab()
 
     def gen_weights(self):
         for intent in self.intents:
@@ -61,6 +63,13 @@ class IntentsGroup:
 
         for lema in self.weights:
             self.weights[lema] = 1 / self.weights[lema]
+
+    def gen_vocab(self):
+        for intent in self.intents:
+            for phrase in intent.phrases:
+                for word in phrase.split(" "):
+                    if word.lower() not in self.vocab:
+                        self.vocab.append(word.lower())
 
     def get_weight(self, lema):
         return self.weights.get(lema, 0)
@@ -75,6 +84,6 @@ class IntentsGroup:
             pickle.dump(self, f)
 
     @classmethod
-    def load(cls, filename):
+    def load(cls, filename) -> "IntentsGroup":
         with open(filename, "rb") as f:
             return pickle.load(f)
