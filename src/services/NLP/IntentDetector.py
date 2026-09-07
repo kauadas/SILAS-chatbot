@@ -1,5 +1,7 @@
 from .models.Intents import IntentsGroup
 
+
+
 class IntentCandidate:
     def __init__(self, intent):
         self.intent = intent
@@ -9,11 +11,10 @@ class IntentCandidate:
         self.context_score = 0
 
     def total_score(self):
-        return self.lexical_score * 0.8 + self.structural_score * 0.2 + self.entity_score + self.context_score
+        return self.lexical_score * 0.9 + self.structural_score * 0.1 + self.entity_score + self.context_score
 
-class StructureMatcher:
 
-    def _levenshtein(self, s1, s2):
+def levenshtein(s1, s2):
         rows = len(s1) + 1
         cols = len(s2) + 1
 
@@ -32,13 +33,15 @@ class StructureMatcher:
 
         return matrix[-1][-1]
 
+
+class StructureMatcher:
     def similarity(self, message, structure):
         message_structure = message.deps
 
         if not message_structure or not structure:
             return 0
 
-        distance = self._levenshtein(message_structure, structure)
+        distance = levenshtein(message_structure, structure)
         
         similarity = 1 - (distance / max(len(message_structure), len(structure)))
         return similarity
@@ -49,14 +52,19 @@ class StructureMatcher:
             similarity = self.similarity(message, structure)
             candidates.append(similarity)
 
+        if not candidates:
+            return 0
+
         candidate = max(candidates)
         return candidate
-    
-class IntentDetector:
+
+
+
+class LexicalMatcher:
     def __init__(self, intents: IntentsGroup):
         self.intents = intents
 
-    def phrase_matcher(self, message, phrase):
+    def lemma_similarity(self, message, phrase):
         message_lemmas = set(message.lemmas)
         phrase_lemmas = set(phrase)
 
@@ -83,13 +91,57 @@ class IntentDetector:
 
         return similarity
 
+    def word_similarity(self, w1, w2):
+        if w1 == w2:
+            return 1
+
+        distance = levenshtein(w1, w2)
+        max_length = max(len(w1), len(w2))
+
+        if max_length == 0:
+            return 0
+
+        similarity = 1 - (distance / max_length)
+        return similarity
+
+
+    def word_by_word_similarity(self, message, phrase):
+        message_words = message.content.split(" ")
+        phrase_words = phrase.split(" ")
+
+        total_score = 0
+        
+        for phrase_word in phrase_words:
+            best_similarity = 0
+            for message_word in message_words:
+                similarity = self.word_similarity(phrase_word, message_word)
+                if similarity > best_similarity:
+                    best_similarity = similarity
+
+            total_score += best_similarity
+
+        total_score /= len(phrase_words)
+
+        return total_score
+            
+                
+
+
+class IntentDetector:
+    def __init__(self, intents: IntentsGroup):
+        self.intents = intents
+        self.structure_matcher = StructureMatcher()
+        self.lexical_matcher = LexicalMatcher(intents)
+        
+
     def lexical_similarity(self, message, intent):
         candidates = []
 
-        for phrase in intent.lemmas:
-            similarity = self.phrase_matcher(message, phrase)
+        for phrase, lemmas in zip(intent.phrases, intent.lemmas):
+            similarity1 = self.lexical_matcher.lemma_similarity(message, lemmas)
+            similarity2 = self.lexical_matcher.word_by_word_similarity(message, phrase)
             #print(f"Similarity: {similarity}")
-            candidates.append(similarity)
+            candidates.append((similarity1 + similarity2) / 2)
 
         if not candidates:
             return 0
@@ -106,7 +158,7 @@ class IntentDetector:
             candidates.append(candidate)
 
         for candidate in candidates:
-            candidate.structural_score = StructureMatcher().compare(message, candidate.intent.deps)
+            candidate.structural_score = self.structure_matcher.compare(message, candidate.intent.deps)
 
         candidates = sorted(candidates, key=lambda x: x.total_score(), reverse=True)
 
