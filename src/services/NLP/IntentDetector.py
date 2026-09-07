@@ -1,4 +1,5 @@
 from .models.Intents import IntentsGroup
+import re
 
 
 
@@ -11,8 +12,7 @@ class IntentCandidate:
         self.context_score = 0
 
     def total_score(self):
-        return self.lexical_score * 0.9 + self.structural_score * 0.1 + self.entity_score + self.context_score
-
+        return self.lexical_score * 0.70 + self.structural_score * 0.15 + self.entity_score * 0.1 + self.context_score * 0.05
 
 def levenshtein(s1, s2):
         rows = len(s1) + 1
@@ -33,19 +33,32 @@ def levenshtein(s1, s2):
 
         return matrix[-1][-1]
 
-
 class StructureMatcher:
     def similarity(self, message, structure):
-        message_structure = message.deps
+        message_structure = [
+            dep for dep in message.deps
+            if dep != "punct"
+        ]
+
+        structure = [
+            dep for dep in structure
+            if dep != "punct"
+        ]
 
         if not message_structure or not structure:
             return 0
 
-        distance = levenshtein(message_structure, structure)
-        
-        similarity = 1 - (distance / max(len(message_structure), len(structure)))
-        return similarity
+        message_set = set(message_structure)
+        structure_set = set(structure)
 
+        intersection = message_set.intersection(structure_set)
+
+        similarity1 = len(intersection) / len(message_set)
+        similarity2 = len(intersection) / len(structure_set)
+
+
+        return (similarity1 + similarity2) / 2
+    
     def compare(self, message, structures):
         candidates = []
         for structure in structures:
@@ -57,8 +70,6 @@ class StructureMatcher:
 
         candidate = max(candidates)
         return candidate
-
-
 
 class LexicalMatcher:
     def __init__(self, intents: IntentsGroup):
@@ -106,8 +117,11 @@ class LexicalMatcher:
 
 
     def word_by_word_similarity(self, message, phrase):
-        message_words = message.content.split(" ")
-        phrase_words = phrase.split(" ")
+        cleaned_message = re.sub(r'[^\w\s]', '', message.content.lower())
+        cleaned_phrase = re.sub(r'[^\w\s]', '', phrase.lower())
+
+        message_words = cleaned_message.split(" ")
+        phrase_words = cleaned_phrase.split(" ")
 
         total_score = 0
         
@@ -123,16 +137,39 @@ class LexicalMatcher:
         total_score /= len(phrase_words)
 
         return total_score
-            
-                
+
+class EntityMatcher:
+    def __init__(self):
+        pass
 
 
+    def match(self, message, intent):
+        if not intent.required_entities and not intent.optional_entities:
+            return 0
+
+        required_entities = intent.required_entities if intent.required_entities else []
+        optional_entities = intent.optional_entities if intent.optional_entities else []
+
+        total_entities = len(required_entities) + len(optional_entities)
+        score = 0
+        for entity in required_entities + optional_entities:
+
+            entities = entity.extract_method(message)
+            if entities:
+                score += 1
+
+
+        return score / total_entities if total_entities > 0 else 0
+    
 class IntentDetector:
     def __init__(self, intents: IntentsGroup):
         self.intents = intents
         self.structure_matcher = StructureMatcher()
         self.lexical_matcher = LexicalMatcher(intents)
-        
+        self.entity_matcher = EntityMatcher()
+
+    def entity_similarity(self, message, intent):
+        return self.entity_matcher.match(message, intent)
 
     def lexical_similarity(self, message, intent):
         candidates = []
@@ -159,6 +196,9 @@ class IntentDetector:
 
         for candidate in candidates:
             candidate.structural_score = self.structure_matcher.compare(message, candidate.intent.deps)
+
+        for candidate in candidates:
+            candidate.entity_score = self.entity_similarity(message, candidate.intent)
 
         candidates = sorted(candidates, key=lambda x: x.total_score(), reverse=True)
 

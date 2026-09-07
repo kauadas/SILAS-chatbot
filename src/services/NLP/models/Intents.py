@@ -12,6 +12,7 @@ class Intent:
 
         self.required_entities = required_entities
         self.optional_entities = optional_entities
+
         self.function = function
         self.response_corpus = response_corpus
 

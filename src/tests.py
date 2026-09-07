@@ -44,6 +44,7 @@ def NLPTEST():
   
 
     print([intents.get_weight(token.lemma_) for token in message.tokens])
+    print([token.dep_ for token in message.tokens])
     intent = natural_processing.process(message)
 
 
