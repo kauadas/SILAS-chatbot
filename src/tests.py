@@ -1,5 +1,7 @@
 
 
+
+
 def regenerate_intents():
     from services.NLP.models.Intents import IntentsGroup, Intent
 
@@ -54,9 +56,51 @@ def NLPTEST():
         print(i.intent.name, i.lexical_score, i.structural_score, i.entity_score, i.context_score, i.total_score())
 
 
+def CFGTEST():
+    from services.CFG.Grammar import Grammar
+    from services.CFG.Symbol import Symbol
+    from services.CFG.Ruler import Rule
+    from services.CFG.Parser import Parse, Simplify
+    from services.preprocessing.message import Message
+    import spacy
+
+    grammar = Grammar([])
+
+    S = Symbol("S")
+    VR = Symbol("VERB_ROOT")
+    VN = Symbol("VN")
+    NO = Symbol("NOUN_obj")
+    DET = Symbol("DET_det")
+    PN = Symbol("PRON_nsubj")
+
+    grammar.add_symbol(S)
+    
+    grammar.add_rule(Rule(VN, [VR, DET, NO]))
+    for rule in grammar.rules:
+        print(f"{rule.lhs.name} -> {" + ".join([symbol.name for symbol in rule.rhs])}")
+    
+
+    test = input("digite uma frase para testar a gramática: ")
+    
+    nlp = spacy.load("pt_core_news_sm")
+    message = Message(nlp, test)
+
+    rule = Parse(message.tags, message.deps, grammar.symbols)
+
+    print(f"{rule.lhs.name} -> {" + ".join([symbol.name for symbol in rule.rhs])}")
+
+    rule = Simplify(rule, grammar.rules)
+
+    print(f"{rule.lhs.name} -> {" + ".join([symbol.name for symbol in rule.rhs])}")
+
+
+    
+
 if __name__ == "__main__":
     test = input("qual test deseja rodar? ")
     if test == "1":
         regenerate_intents()
     elif test == "2":
         NLPTEST()
+    elif test == "3":
+        CFGTEST()

@@ -8,7 +8,7 @@ class Message:
         self.tokenize()
         self.lemmatize()
         self.classify()
-        self.deps()
+        self.gen_deps()
 
     def normalize(self):
         self.normalized = self.content.lower()
@@ -29,7 +29,7 @@ class Message:
         self.tags = [token.pos_ for token in self.tokens]
         return self.tags
 
-    def deps(self):
+    def gen_deps(self):
         self.deps = [token.dep_ for token in self.tokens]
         return self.deps
     
