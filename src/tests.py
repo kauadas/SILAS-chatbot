@@ -1,13 +1,13 @@
+import spacy
 
+nlp = spacy.load("pt_core_news_sm")
 
 
 
 def regenerate_intents():
     from services.NLP.models.Intents import IntentsGroup, Intent
-
-    import spacy
     import json
-    nlp = spacy.load("pt_core_news_sm")
+    
     intents = []
     
     
@@ -26,11 +26,7 @@ def regenerate_intents():
 def NLPTEST():
     from services.NLP.NaturalProcessing import NaturalProcessing
     from services.NLP.models.Intents import IntentsGroup, Intent
-    import spacy
-    nlp = spacy.load("pt_core_news_sm")
 
-
-   
 
     intents = IntentsGroup.load("intents.pkl")
     intents.vocab = []
@@ -62,7 +58,7 @@ def CFGTEST():
     from services.CFG.Ruler import Rule
     from services.CFG.Parser import Parse, Simplify
     from services.preprocessing.message import Message
-    import spacy
+    
 
     grammar = Grammar([])
 
@@ -82,7 +78,7 @@ def CFGTEST():
 
     test = input("digite uma frase para testar a gramática: ")
     
-    nlp = spacy.load("pt_core_news_sm")
+    
     message = Message(nlp, test)
 
     rule = Parse(message.tokens, message.tags, message.deps)
