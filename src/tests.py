@@ -85,13 +85,19 @@ def CFGTEST():
     nlp = spacy.load("pt_core_news_sm")
     message = Message(nlp, test)
 
-    rule = Parse(message.tags, message.deps, grammar.symbols)
+    rule = Parse(message.tokens, message.tags, message.deps)
 
     print(f"{rule.lhs.name} -> {" + ".join([symbol.name for symbol in rule.rhs])}")
 
     rule = Simplify(rule, grammar.rules)
 
     print(f"{rule.lhs.name} -> {" + ".join([symbol.name for symbol in rule.rhs])}")
+    print("Árvore de derivação:")
+    for symbol in rule.rhs:
+        if symbol.tree:
+            print(f"{symbol.name} -> {" + ".join([s.name for s in symbol.tree])}")
+        else:
+            print(f"{symbol.name} (terminal)")
 
 
     
