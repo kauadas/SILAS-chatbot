@@ -1,6 +1,6 @@
 from ..models.Intents import IntentsGroup
 from .IntentDetector import IntentDetector
-from .Context import Context
+from ..Context.Context import Context
 from ..models.Entitys import EntitysGroup
 from ..CFG.Grammar import Grammar
 
