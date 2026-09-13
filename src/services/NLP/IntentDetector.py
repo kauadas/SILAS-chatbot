@@ -1,4 +1,8 @@
-from .models.Intents import IntentsGroup
+from ..models.Intents import IntentsGroup
+from ..CFG.IntentDetector import compare_rules_with_grammar
+from ..CFG.Grammar import Grammar
+from ..CFG.Symbol import Symbol
+from ..CFG.Parser import Parse
 from ..levenshtein import distance as levenshtein
 import re
 
@@ -17,42 +21,15 @@ class IntentCandidate:
 
 
 class StructureMatcher:
-    def similarity(self, message, structure):
-        message_structure = [
-            dep for dep in message.deps
-            if dep != "punct"
-        ]
+    def __init__(self, grammar: Grammar = None):
+        self.grammar = grammar
+        
+    def compare(self, message, intent):
+        parsed_message = Parse(Symbol(intent), message.tokens, message.tags, message.deps)
+        value =  compare_rules_with_grammar(parsed_message, self.grammar, intent)
+        print(value)
+        return value
 
-        structure = [
-            dep for dep in structure
-            if dep != "punct"
-        ]
-
-        if not message_structure or not structure:
-            return 0
-
-        message_set = set(message_structure)
-        structure_set = set(structure)
-
-        intersection = message_set.intersection(structure_set)
-
-        similarity1 = len(intersection) / len(message_set)
-        similarity2 = len(intersection) / len(structure_set)
-
-
-        return (similarity1 + similarity2) / 2
-    
-    def compare(self, message, structures):
-        candidates = []
-        for structure in structures:
-            similarity = self.similarity(message, structure)
-            candidates.append(similarity)
-
-        if not candidates:
-            return 0
-
-        candidate = max(candidates)
-        return candidate
 
 class LexicalMatcher:
     def __init__(self, intents: IntentsGroup):
@@ -145,9 +122,9 @@ class EntityMatcher:
         return score / total_entities if total_entities > 0 else 0
     
 class IntentDetector:
-    def __init__(self, intents: IntentsGroup):
+    def __init__(self, intents: IntentsGroup, Grammar: Grammar = None):
         self.intents = intents
-        self.structure_matcher = StructureMatcher()
+        self.structure_matcher = StructureMatcher(Grammar)
         self.lexical_matcher = LexicalMatcher(intents)
         self.entity_matcher = EntityMatcher()
 
@@ -178,7 +155,7 @@ class IntentDetector:
             candidates.append(candidate)
 
         for candidate in candidates:
-            candidate.structural_score = self.structure_matcher.compare(message, candidate.intent.deps)
+            candidate.structural_score = self.structure_matcher.compare(message, candidate.intent.name)
 
         for candidate in candidates:
             candidate.entity_score = self.entity_similarity(message, candidate.intent)
