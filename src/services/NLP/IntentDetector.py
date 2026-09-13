@@ -1,4 +1,5 @@
 from .models.Intents import IntentsGroup
+from ..levenshtein import distance as levenshtein
 import re
 
 
@@ -14,24 +15,6 @@ class IntentCandidate:
     def total_score(self):
         return self.lexical_score * 0.70 + self.structural_score * 0.15 + self.entity_score * 0.1 + self.context_score * 0.05
 
-def levenshtein(s1, s2):
-        rows = len(s1) + 1
-        cols = len(s2) + 1
-
-        matrix = [[0] * cols for _ in range(rows)]
-
-        for i in range(1, rows):
-            matrix[i][0] = i
-
-        for j in range(1, cols):
-            matrix[0][j] = j
-
-        for i in range(1, rows):
-            for j in range(1, cols):
-                cost = 0 if s1[i - 1] == s2[j - 1] else 1
-                matrix[i][j] = min(matrix[i - 1][j] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j - 1] + cost)
-
-        return matrix[-1][-1]
 
 class StructureMatcher:
     def similarity(self, message, structure):

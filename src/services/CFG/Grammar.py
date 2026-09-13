@@ -12,6 +12,9 @@ class Grammar:
         self.rules.append(rule)
         self.gen_symbols()
 
+    def get_rules_by_lhs(self, lhs):
+        return [rule for rule in self.rules if rule.lhs.name == lhs.name]
+
     def add_symbol(self, symbol):
         if symbol.name not in self.symbols:
             self.symbols[symbol.name] = Symbol(symbol.name)

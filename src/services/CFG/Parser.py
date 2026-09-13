@@ -20,10 +20,10 @@ def Simplify(rule_, rules):
     return rule_
         
 
-def Parse(tokens,pos, deps):
+def Parse(S ,tokens,pos, deps):
     rule = []
 
-    rule.append(Symbol("S"))
+    rule.append(Symbol(S.name))
     rule.append([])
     for token, pos_tag, dep_tag in zip(tokens, pos, deps):
         if pos_tag == "PUNCT":

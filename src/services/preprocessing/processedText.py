@@ -1,8 +1,8 @@
 import spacy
 
-class Message:
-    def __init__(self, nlp, message):
-        self.content = message
+class ProcessedText:
+    def __init__(self, nlp, ProcessedText):
+        self.content = ProcessedText
         self.nlp = nlp
         self.normalize()
         self.tokenize()
@@ -35,10 +35,10 @@ class Message:
     
 if __name__ == "__main__":
     nlp = spacy.load("pt_core_news_sm")
-    message = Message(nlp, "Os gatos estavam correndo no telhado!")
-    print(message.normalized)
-    print(message.tokens)
-    print(message.lemmas)
+    ProcessedText = ProcessedText(nlp, "Os gatos estavam correndo no telhado!")
+    print(ProcessedText.normalized)
+    print(ProcessedText.tokens)
+    print(ProcessedText.lemmas)
 
-    for item in message.tokens:
+    for item in ProcessedText.tokens:
         print(item.lemma_, item.pos_, item.dep_)
