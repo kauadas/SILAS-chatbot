@@ -38,8 +38,8 @@ def NLPTEST():
 
 
     intents = IntentsGroup.load("intents.pkl")
-    intents.vocab = []
-    intents.gen_vocab()
+
+
 
     for intent in intents.intents:
             for phrase in intent.phrases:
@@ -122,8 +122,8 @@ def GFCTEST2():
     from services.models.Intents import IntentsGroup
 
     intents = IntentsGroup.load("intents.pkl")
-    intents.vocab = []
-    intents.gen_vocab()
+
+
 
     grammar = Grammar([])
 
@@ -168,8 +168,8 @@ def complete_test():
 
 
     intents = IntentsGroup.load("intents.pkl")
-    intents.vocab = []
-    intents.gen_vocab()
+
+
 
     grammar = Grammar([])
 
