@@ -9,3 +9,10 @@ class Context:
         self.humor = 0
 
         self.history = []
+
+
+    def remember(self, intent, entities, message):
+        self.last_intent = intent
+        self.last_entities = entities
+        self.last_message = message
+        self.history.append((intent, entities, message))

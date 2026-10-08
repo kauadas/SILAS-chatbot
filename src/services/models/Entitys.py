@@ -15,7 +15,7 @@ class EntitysGroup:
             return pickle.load(f)
 
 class Entity:
-    def __init__(self, name, extract_method, type):
+    def __init__(self, name, extract_method, typename):
         self.name = name
         self.extract_method = extract_method
-        self.type = type
+        self.type = typename

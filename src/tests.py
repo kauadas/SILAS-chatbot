@@ -154,8 +154,27 @@ def GFCTEST2():
 
 
 
-def complete_test():
-    pass
+def nlg_test():
+    from services.NLG.Generator import Generator
+    from services.NLG.Corpus import Corpus
+
+    corpus_data = {
+        "clima": ["O clima em {location} é de {temperature}°C com umidade de {humidity}%.",
+                  "em {location}, a temperatura é de {temperature}°C"]
+    }
+
+    corpus = Corpus(corpus_data)
+    generator = Generator(corpus)
+
+    intent = input("Digite o intent: ")
+    entities_input = input("Digite as entidades no formato 'key1=value1,key2=value2': ")
+    entities = dict(item.split("=") for item in entities_input.split(","))
+
+    try:
+        generated_text = generator.generate(intent, entities)
+        print(f"Texto gerado: {generated_text}")
+    except ValueError as e:
+        print(f"Erro: {e}")
 
 
 if __name__ == "__main__":
@@ -169,4 +188,4 @@ if __name__ == "__main__":
     elif test == "4":
         GFCTEST2()
     elif test == "5":
-        complete_test()
+        nlg_test()
