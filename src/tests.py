@@ -155,44 +155,7 @@ def GFCTEST2():
 
 
 def complete_test():
-    from services.NLP.NaturalProcessing import NaturalProcessing
-    from services.models.Intents import IntentsGroup, Intent
-
-    from services.CFG.Grammar import Grammar
-    from services.CFG.Symbol import Symbol
-    from services.CFG.Ruler import Rule
-    from services.CFG.Parser import Parse
-    from services.CFG.Comparator import compare_ordened_rules, compare_rules
-
-    from services.preprocessing.processedText import ProcessedText
-
-
-    intents = IntentsGroup.load("intents.pkl")
-
-
-
-    grammar = Grammar([])
-
-    for intent in intents.intents:
-        for phrase in intent.phrases:
-            message = ProcessedText(nlp, phrase)
-            S = intent.name
-            S = Symbol(S)
-            rule = Parse(S, message.tokens, message.tags, message.deps)
-            grammar.add_rule(rule)
-
-
-    print(len(intents.intents))
-
-
-    from services.preprocessing.processedText import ProcessedText
-    natural_processing = NaturalProcessing(intents, None)
-    test = input(" >> ")
-    message = ProcessedText(nlp, test)
-
-    print([intents.get_weight(token.lemma_) for token in message.tokens])
-    print([token.dep_ for token in message.tokens])
-    intents = natural_processing.process(message)
+    pass
 
 
 if __name__ == "__main__":

@@ -36,6 +36,7 @@ class ProcessedText:
 if __name__ == "__main__":
     nlp = spacy.load("pt_core_news_sm")
     ProcessedText = ProcessedText(nlp, "Os gatos estavam correndo no telhado!")
+
     print(ProcessedText.normalized)
     print(ProcessedText.tokens)
     print(ProcessedText.lemmas)
