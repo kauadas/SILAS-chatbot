@@ -5,7 +5,16 @@ import spacy
 
 nlp = spacy.load("pt_core_news_sm")
 
+def doc(text):
+    doc_ = nlp(text)
+    doc = {"tokens": [], "lemmas": [], "pos": [], "deps": []}
+    for token in doc_:
+        doc["tokens"].append(token)
+        doc["lemmas"].append(token.lemma_)
+        doc["pos"].append(token.pos_)
+        doc["deps"].append(token.dep_)
 
+    return doc
 
 def regenerate_intents():
     from services.models.Intents import IntentsGroup, Intent
@@ -21,13 +30,12 @@ def regenerate_intents():
         intents.append(Intent(intent["name"], intent["phrases"], [], [], None, None))
 
     intents = IntentsGroup(intents)
-    intents.process(nlp)
-
+    intents.process(doc)
     intents.save("intents.pkl")
     print("Intents regenerated and saved to intents.pkl")
 
 def NLPTEST():
-    from services.NLP.NaturalProcessing import NaturalProcessing
+    from services.NLU.NaturalUnderstanding import NaturalUnderstanding
     from services.models.Intents import IntentsGroup, Intent
     from services.CFG.Grammar import Grammar
     from services.CFG.Parser import Parse
@@ -43,7 +51,7 @@ def NLPTEST():
 
     for intent in intents.intents:
             for phrase in intent.phrases:
-                message = ProcessedText(nlp, phrase)
+                message = ProcessedText(phrase, doc)
                 S = intent.name
                 S = Symbol(S)
                 rule = Parse(S, message.tokens, message.tags, message.deps)
@@ -52,9 +60,9 @@ def NLPTEST():
     print(len(intents.intents))
 
 
-    natural_processing = NaturalProcessing(intents, None, grammar)
+    natural_processing = NaturalUnderstanding(intents, None, grammar)
     test = input(" >> ")
-    message = ProcessedText(nlp, test)
+    message = ProcessedText(test, doc)
   
 
     print([intents.get_weight(token.lemma_) for token in message.tokens])
@@ -95,7 +103,7 @@ def CFGTEST():
     test = input("digite uma frase para testar a gramática: ")
     
     
-    message = ProcessedText(nlp, test)
+    message = ProcessedText(test, doc)
 
     rule = Parse(S, message.tokens, message.tags, message.deps)
 
@@ -130,14 +138,14 @@ def GFCTEST2():
 
     for intent in intents.intents:
         for phrase in intent.phrases:
-            message = ProcessedText(nlp, phrase)
+            message = ProcessedText(phrase, doc)
             S = intent.name
             S = Symbol(S)
             rule = Parse(S, message.tokens, message.tags, message.deps)
             grammar.add_rule(rule)
 
     test = input("digite uma frase para testar a gramática: ")
-    message = ProcessedText(nlp, test)
+    message = ProcessedText(test, doc)
     rule = Parse(Symbol("S"), message.tokens, message.tags, message.deps)
 
     candidates = {}
@@ -175,6 +183,7 @@ def nlg_test():
         print(f"Texto gerado: {generated_text}")
     except ValueError as e:
         print(f"Erro: {e}")
+
 
 
 if __name__ == "__main__":

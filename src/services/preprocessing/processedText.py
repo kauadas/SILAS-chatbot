@@ -1,14 +1,17 @@
-import spacy
+
 
 class ProcessedText:
-    def __init__(self, nlp, ProcessedText):
-        self.content = ProcessedText
-        self.nlp = nlp
-        self.normalize()
-        self.tokenize()
-        self.lemmatize()
-        self.classify()
-        self.gen_deps()
+    def __init__(self, content, doc):
+        self.content = content
+        self.doc = doc(content)
+
+        self.tokens = self.doc["tokens"]
+        self.lemmas = self.doc["lemmas"]
+        self.tags = self.doc["pos"]
+        self.deps = self.doc["deps"]
+
+        self.normalized = self.normalize()
+
 
     def normalize(self):
         self.normalized = self.content.lower()
@@ -16,26 +19,18 @@ class ProcessedText:
 
         return self.normalized
 
-    def tokenize(self):
-        doc = self.nlp(self.normalized)
-        self.tokens = [token for token in doc]
-        return self.tokens
-
-    def lemmatize(self):
-        self.lemmas = [token.lemma_ for token in self.tokens]
-        return self.lemmas
-
-    def classify(self):
-        self.tags = [token.pos_ for token in self.tokens]
-        return self.tags
-
-    def gen_deps(self):
-        self.deps = [token.dep_ for token in self.tokens]
-        return self.deps
-    
 if __name__ == "__main__":
+    import spacy
     nlp = spacy.load("pt_core_news_sm")
-    ProcessedText = ProcessedText(nlp, "Os gatos estavam correndo no telhado!")
+    doc_ = nlp("Os gatos estavam correndo no telhado!")
+    doc = {"tokens": [], "lemmas": [], "pos": [], "deps": []}
+    for token in doc_:
+        doc["tokens"].append(token)
+        doc["lemmas"].append(token.lemma_)
+        doc["pos"].append(token.pos_)
+        doc["deps"].append(token.dep_)
+
+    ProcessedText = ProcessedText("Os gatos estavam correndo no telhado!", **doc)
 
     print(ProcessedText.normalized)
     print(ProcessedText.tokens)

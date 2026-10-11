@@ -2,24 +2,38 @@
 
 ## Sistema Idiota de Linguística e Análise Sintática
 
-O SILAS é um chatbot experimental em Python para detecção de intenção em linguagem natural. O projeto foi pensado como alternativa leve e modular para conversas simples, em vez de depender de um modelo grande para tarefas básicas.
+O SILAS é um chatbot experimental em Python focado em detecção de intenção em linguagem natural. O projeto foi pensado como uma alternativa leve, modular e transparente para aplicações de conversação simples, sem depender de um modelo grande para tarefas bem definidas.
 
-Ele combina:
+A proposta central é combinar técnicas clássicas de NLP em uma arquitetura simples:
 
-- normalização e tokenização de mensagens;
-- lematização e análise sintática com spaCy;
-- comparação de frases por similaridade léxica e estrutural;
-- arquitetura em camadas para facilitar expansão.
-
----
-
-## Objetivo
-
-O sistema busca interpretar a intenção do usuário e classificar mensagens em categorias como cumprimentos, perguntas, tarefas, lembretes e comandos. A proposta principal é manter o código simples, transparente e fácil de adaptar em projetos próprios.
+- normalização de texto;
+- tokenização e lematização;
+- análise sintática básica com spaCy;
+- comparação por similaridade léxica e estrutural;
+- classificação de intenções em um pipeline organizado.
 
 ---
 
-## Estrutura do projeto
+## Visão geral
+
+O SILAS tenta interpretar mensagens do usuário e identificar a intenção por trás delas, como:
+
+- cumprimento;
+- despedida;
+- agradecimento;
+- pergunta sobre hora/data;
+- clima;
+- lembretes;
+- tarefas;
+- comandos de sistema;
+- conversa casual;
+- intenção desconhecida.
+
+O objetivo não é competir com LLMs em conhecimento geral, mas oferecer uma base leve e controlável para projetos próprios, automações simples e protótipos de chatbot.
+
+---
+
+## Arquitetura do projeto
 
 ```text
 SILAS/
@@ -42,51 +56,40 @@ SILAS/
 │       │   └── models/
 │       │       ├── Entitys.py
 │       │       └── Intents.py
-│       └── preprocessing/
-│           └── message.py
-└── .venv/
+│       ├── preprocessing/
+│       │   └── message.py
+│       └── models/
+├── .venv/
+└── .gitignore
 ```
 
 ---
 
-## Como o sistema trabalha
-
-A pipeline atual do projeto é:
+## Fluxo atual do sistema
 
 ```text
 Mensagem do usuário
-   ↓
+        ↓
 Normalização
-   ↓
-Tokenização + lematização
-   ↓
-Análise de partes do discurso e dependências
-   ↓
+        ↓
+Tokenização
+        ↓
+Lematização
+        ↓
+Extração de tags e dependências
+        ↓
 Comparação com intenções treinadas
-   ↓
-Ranking dos candidatos
-   ↓
-Resposta ou ação
+        ↓
+Ranking de candidatos
+        ↓
+Resposta / ação
 ```
 
-A detecção de intenção usa similaridade léxica e estrutural. Em outras palavras, o sistema tenta identificar a intenção comparando o texto do usuário com frases de exemplo já conhecidas no dataset.
+A detecção de intenção usa principalmente:
 
----
-
-## Intenções de exemplo
-
-O arquivo `test.json` contém vários exemplos de intenções, incluindo:
-
-- cumprimento (`greeting`)
-- despedida (`goodbye`)
-- agradecimento (`thanks`)
-- ajuda (`help`)
-- hora/data (`time_query`, `date_query`)
-- clima (`weather_query`)
-- tarefas e lembretes
-- pesquisa, aplicativos e controle de sistema
-- conversa casual e piadas
-- intent desconhecida (`unknown`)
+1. similaridade léxica;
+2. similaridade estrutural;
+3. peso das palavras por frequência no conjunto de intenções.
 
 ---
 
@@ -94,29 +97,56 @@ O arquivo `test.json` contém vários exemplos de intenções, incluindo:
 
 ### `src/services/preprocessing/message.py`
 
-Responsável por:
+Responsável por transformar a mensagem em uma representação útil para processamento:
 
-- limpar a mensagem;
-- normalizar para minúsculas;
-- tokenizar;
-- extrair lemas;
-- obter tags e dependências sintáticas.
+- limpeza e normalização;
+- tokenização;
+- lematização;
+- extração de POS tags;
+- extração de dependências sintáticas.
 
 ### `src/services/NLU/IntentDetector.py`
 
-Implementa a lógica de classificação. Ele calcula pontuações de:
+Contém a lógica para classificar a mensagem e gerar um ranking de intenções. O detector combina:
 
-- similaridade lexical;
-- similaridade estrutural;
-- ranking dos candidatos.
+- similaridade lexical entre frase do usuário e frases de treino;
+- comparação estrutural com dependências sintáticas;
+- pontuação final para seleção do melhor candidato.
 
 ### `src/services/NLU/models/Intents.py`
 
-Define as classes que representam uma intenção e um grupo de intenções, além de processamento e persistência do conjunto de intenções.
+Define a estrutura de:
+
+- `Intent`: representação de uma intenção com frases, lemas e dependências;
+- `IntentsGroup`: conjunto de intenções, processamento e persistência.
 
 ### `src/services/NLU/Context.py`
 
-Mantém o contexto do diálogo e o histórico de estado da conversa.
+Módulo de contexto para manter estado e histórico da conversa.
+
+---
+
+## Dataset de intents
+
+O arquivo `test.json` contém exemplos diversos de intenções para treinamento e teste, incluindo:
+
+- `greeting`
+- `goodbye`
+- `thanks`
+- `help`
+- `time_query`
+- `date_query`
+- `weather_query`
+- `create_reminder`
+- `list_reminders`
+- `create_task`
+- `list_tasks`
+- `search`
+- `open_application`
+- `close_application`
+- `unknown`
+
+Esse conjunto funciona como base para a detecção inicial de intenção.
 
 ---
 
@@ -124,7 +154,7 @@ Mantém o contexto do diálogo e o histórico de estado da conversa.
 
 - Python 3.10+
 - spaCy
-- modelo `pt_core_news_sm`
+- modelo do idioma `pt_core_news_sm`
 
 ---
 
@@ -150,42 +180,61 @@ python -m spacy download pt_core_news_sm
 python src/main.py
 ```
 
-### 4) Testar a detecção de intenção
+### 4) Rodar teste de detecção de intenção
 
 ```bash
 python src/tests.py
 ```
 
+### 5) Rodar teste experimental
+
+```bash
+python intent_test.py
+```
+
 ---
 
-## Status atual
+## Status do projeto
 
-O projeto está em desenvolvimento, mas já possui uma base funcional de NLU experimental.
+O projeto está em desenvolvimento e já possui uma base funcional de NLU experimental.
 
 ### Funcionalidades presentes
 
-- ✅ preprocessamento de mensagem
+- ✅ preprocessamento de mensagens
 - ✅ tokenização e lematização
-- ✅ análise de tags e dependências
+- ✅ extração de tags e dependências sintáticas
 - ✅ detecção de intenção por similaridade
 - ✅ dataset inicial com intenções
 - ✅ execução básica do chatbot em terminal
 
-### O que ainda está sendo construido
+### Em evolução
 
-- refinamento da detecção de intenção
-- gerenciamento de diálogo mais robusto
-- entidades e contexto mais avançados
-- integração com respostas estruturadas
-- evolução da camada CFG e análise sintática
+- refinamento da detecção de intenção;
+- contexto e memória de diálogo;
+- extração de entidades mais avançada;
+- respostas estruturadas;
+- camada de integração com ações reais;
+- evolução para análise sintática e CFG.
 
 ---
 
 ## Filosofia do projeto
 
-O SILAS foi pensado como uma opção leve e transparente para projetos próprios. Em vez de depender de um modelo gigante para algo que pode ser resolvido com regras, similaridade e análise linguística simples, o projeto busca manter o sistema compreensível e adaptável.
+O SILAS foi criado para ser um chatbot enxuto, transparente e fácil de adaptar. Em vez de depender de um modelo grande para tarefas simples, ele busca fazer uso de regras, processamento lingüístico e comparação semântica de forma controlada e eficiente.
 
-> Quando a tarefa é bem definida e limitada, nem sempre é necessário carregar um LLM completo para resolvê-la.
+> Quando a tarefa é específica e bem delimitada, muitas vezes não vale a pena “carregar” um LLM inteiro para resolvê-la.
+
+---
+
+## Roadmap
+
+- [ ] melhorar robustez da NLU para frases mais naturais;
+- [ ] ampliar intent detection com mais casos reais;
+- [ ] melhorar estado de contexto e diálogo multi-turno;
+- [ ] criar regras de resposta por intenção;
+- [ ] integrar entidades e parâmetros de consulta;
+- [ ] explorar gramáticas CFG e análise sintática mais profunda;
+- [ ] testar uso em projetos reais e automações simples.
 
 ---
 

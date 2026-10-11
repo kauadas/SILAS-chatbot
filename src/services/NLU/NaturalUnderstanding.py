@@ -5,12 +5,12 @@ from ..models.Entitys import EntitysGroup
 from ..CFG.Grammar import Grammar
 
 
-class NLPResponse:
+class NLUResponse:
     def __init__(self, intent, entities):
         self.intent = intent
         self.entities = entities
 
-class NaturalProcessing:
+class NaturalUnderstanding:
     def __init__(self, intents: IntentsGroup, entitys: EntitysGroup, grammar: Grammar):
         
         self.intents = intents

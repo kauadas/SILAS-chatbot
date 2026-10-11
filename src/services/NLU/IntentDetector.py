@@ -15,9 +15,10 @@ class IntentCandidate:
         self.structural_score = 0
         self.entity_score = 0
         self.context_score = 0
+        
 
     def total_score(self):
-        return self.lexical_score * 0.70 + self.structural_score * 0.15 + self.entity_score * 0.1 + self.context_score * 0.05
+        return self.lexical_score * 0.70 + self.structural_score * 0.15 + self.entity_score * 0.10 + self.context_score * 0.05
 
 
 class StructureMatcher:

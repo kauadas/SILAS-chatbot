@@ -1,7 +1,9 @@
 import pickle
 
+
+
 class Intent:
-    def __init__(self, name, phrases, required_entities, optional_entities, function, response_corpus):
+    def __init__(self, name, phrases, required_entities, optional_entities, function):
         self.name = name
 
         self.phrases = phrases
@@ -14,26 +16,25 @@ class Intent:
         self.optional_entities = optional_entities
 
         self.function = function
-        self.response_corpus = response_corpus
 
-    def process(self, nlp):
+    def process(self, doc):
 
         final_phrases = []
         tags = []
         deps = []
         for training_phrase in self.phrases:
-            doc = nlp(training_phrase.lower())
-            final_phrases.append([token.lemma_ for token in doc])
-            tags.append([token.pos_ for token in doc])
-            deps.append([token.dep_ for token in doc])
+            doc_ = doc(training_phrase.lower())
+            final_phrases.append(doc_.lemmas)
+            tags.append(doc_.pos)
+            deps.append(doc_.deps)
 
         self.lemmas = final_phrases
         self.tags = tags
         self.deps = deps
 
 
-    def context(self):
-        pass
+    def context(self, ctx):
+        return 0
 
 
 class IntentsGroup:
